@@ -56,13 +56,15 @@ function init() {
     for (let i = 0; i < teamAmount; i++) {
         colors[i] = "#" + ("000000" + Math.floor(Math.random()*16777215).toString(16)).slice(-6);
         names[i] = "team " + i;
-        
+
         // Get RGB colors from hex for canvas drawing
-        rgbcolors.push([
-           parseInt(colors[i].substring(1, 3), 16),
-           parseInt(colors[i].substring(3, 5), 16),
-           parseInt(colors[i].substring(4, 6), 16) 
-        ]);
+        rgbcolors.push(new Uint8Array([
+            parseInt(colors[i].substring(1, 3), 16),
+            parseInt(colors[i].substring(3, 5), 16),
+            parseInt(colors[i].substring(4, 6), 16),
+            255
+        ])
+        );
     }
 
     console.log(colors)
@@ -84,10 +86,7 @@ function draw() {
 		for (let j = 0; j < boardSize.y; j++) {
             let c = rgbcolors[board[i + j * boardSize.x]]
             let pos = (i + j * boardSize.x) * 4;
-            imageDataArray[pos] = c[0];
-            imageDataArray[pos + 1] = c[1];
-            imageDataArray[pos + 2] = c[2];
-            imageDataArray[pos + 3] = 255;
+            imageDataArray.set(c, pos);
 		}
 	}
 
