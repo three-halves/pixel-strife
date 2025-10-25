@@ -1,3 +1,4 @@
+import { rleDecode } from "./rle.js";
 import {clamp, indexOfMax } from "./utils.js";
 
 // Globals
@@ -6,6 +7,10 @@ let colors = [];
 let rgbcolors = [];
 let names = [];
 let boardSize;
+
+// Optional initial board state that also dictates team amount.
+// Stored in same array format as board, decoded from Base64 string
+let initalState;
 
 // Canvas ref
 const canvas = document.getElementById("canvas");
@@ -32,7 +37,7 @@ let stepInterval;
 const params = new URLSearchParams(document.location.search);
 console.log(params);
 
-// Tries to parse all URL params. If unsuccessful, redirect to config wizard
+// Tries to parse all required URL params. If unsuccessful, redirect to config wizard
 function validateParams() {
     if (
     !parseInt(params.get("teams")) || 
@@ -42,6 +47,20 @@ function validateParams() {
         window.alert("invalid parameters!")
         window.location.replace("config.html");
         }
+}
+
+// Returns true if setup should use initial state or false if not. Sets global initialState.
+function validateInitalState() {
+    let encodedInitialState = params.get("initial");
+    try {
+        initalState = rleDecode(encodedInitialState)
+    }
+    catch (error) {
+        return false;
+    }
+
+    // Do some basic validation checks
+    return ((initalState.length === boardSize.x * boardSize.y) && (Math.max(...initalState) === teamAmount - 1));
 }
 
 // Initialize all game variables from config and setup initial board state
@@ -82,11 +101,18 @@ function init() {
     console.log(colors)
 
     // set initial board state
-    let segmentAmount = boardSize.x / teamAmount;
-    for (let i = 0; i < boardSize.x; i++) {
-        for (let j = 0; j < boardSize.y; j++) {
-            // console.log(board);
-            board[i + j * boardSize.x] = Math.floor(i / segmentAmount);
+    // If we have a valid initial state, setup board with it
+    if (validateInitalState()) {
+        board = initalState.slice();
+    }
+    // Otherwise, setup stripe pattern
+    else {
+        let segmentAmount = boardSize.x / teamAmount;
+        for (let i = 0; i < boardSize.x; i++) {
+            for (let j = 0; j < boardSize.y; j++) {
+                // console.log(board);
+                board[i + j * boardSize.x] = Math.floor(i / segmentAmount);
+            }
         }
     }
 
