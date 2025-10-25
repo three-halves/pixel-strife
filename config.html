@@ -5,25 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pixel strife configuration wizard</title>
 </head>
+
 <body>
     <form method="get" action="index.html">
     <fieldset>
         <legend>pixel-strife configuration wizard</legend>
         <label for="team amount"># of teams: </label>
-        <input type="number" min="2" step="1" value="2" name="teams" required>
+        <input type="number" min="2" step="1" value="2" id="teams" name="teams" required>
 
         <label for="board width">board width: </label>
-        <input type="number" min="8" step="1" value="125" name="sizex" required>
+        <input type="number" min="8" step="1" value="125" id ="sizex" name="sizex" required>
 
         <label for="board height">board height: </label>
-        <input type="number" min="8" step="1" value="125" name="sizey" required>
+        <input type="number" min="8" step="1" value="125" id="sizey" name="sizey" required>
 
         <label for="step interval">step interval (ms): </label>
         <input type="number" min="1" step="1" value="2" name="interval" required>
 
+        <label for="inital board state">initial board state specifier: </label>
+        <input type="text" name="initial" id="initial">
+
         <input type="submit" value="go...">
     </fieldset>    
     </form>
+
+    <fieldset>
+        <legend>special options</legend>
+        <label for="board from image">Make board from image: </label>
+        <input type="file" id="image-upload" name="image" accept="image/*" />
+    </fieldset>
+    <img id="test" src="">
+
+    <script src="config.js" type="module"></script>
 </body>
 
 <style>
@@ -33,6 +46,17 @@
         display: grid;
         grid-template-columns: max-content max-content;
         grid-gap: 8px;
+
+        text-align: left;
+    }
+
+    label:has(+ input:required)::before {
+        content: "*";
+        color: red;
+    }
+
+    input:invalid {
+        border: 2px solid red;
     }
 
 </style>

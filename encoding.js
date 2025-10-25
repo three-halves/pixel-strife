@@ -1,5 +1,5 @@
 // pixel-strife Run Length Encoding specification:
-// Each run is stored as 3 Base64 characters: 1 value character and 2 length characters
+// Each run is stored as 3 Base64 characters: 1 value character and 3 length characters
 // Characters used for Base64 are the following:
 //   0       8       16      24      32      40      48      56     63
 //   v       v       v       v       v       v       v       v      v
@@ -7,12 +7,12 @@
 
 // Takes an RLE encoded string and returns an array
 export function rleDecode(input) {
-    if (input.length % 3 !== 0) throw "Invalid input string length!"
+    if (input.length % 4 !== 0) throw "Invalid input string length!"
 
     let arr = [];
 
-    for (let i = 0; i < input.length; i +=3 ) {
-        let runLength = Base64.toNumber(input[i + 1] + input[i + 2]);
+    for (let i = 0; i < input.length; i += 4 ) {
+        let runLength = Base64.toNumber(input[i + 1] + input[i + 2] + input[i + 3]);
         let runValue = Base64.toNumber(input[i]);
         arr.push(...new Uint8Array(runLength).fill(runValue));
     }
@@ -21,8 +21,37 @@ export function rleDecode(input) {
     return new Uint8Array(arr);
 }
 
-export function rleEncode() {
+// Takes an array of integers and returns and RLE encoded string
+export function rleEncode(input) {
+    let runValue = input[1];
+    let runLength = 1;
+    let str = "";
 
+    for (let i = 1; i < input.length; i++) {
+        let c = input[i];
+        // If current char is the same as runValue or run length is within bounds, we're in the same run
+        if (runValue === c && runLength < 262143) {
+            runLength++;
+        }
+        // Otherwise, this run has ended. Write to string and start new run
+        else {
+            // Write value and length
+            str += Base64.fromNumber(runValue)
+            let l = Base64.fromNumber(runLength);
+            str += l.padStart(3, '0');
+
+            // start new run
+            runValue = c;
+            runLength = 1;
+        }
+    }
+
+    // write final run
+    str += Base64.fromNumber(runValue)
+    let l = Base64.fromNumber(runLength);
+    str += l.padStart(2, '0');
+
+    return str;
 }
 
 // Base64 encoding code taken from https://stackoverflow.com/questions/6213227/fastest-way-to-convert-a-number-to-radix-64-in-javascript

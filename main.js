@@ -1,4 +1,4 @@
-import { rleDecode } from "./rle.js";
+import { rleDecode } from "./encoding.js";
 import {clamp, indexOfMax } from "./utils.js";
 
 // Globals
