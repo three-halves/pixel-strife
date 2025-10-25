@@ -1,15 +1,19 @@
 import {clamp, indexOfMax } from "./utils.js";
 
-// globals
+// Globals
 let teamAmount;
 let colors = [];
+let rgbcolors = [];
 let names = [];
 let boardSize;
 
+// Canvas ref
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d")
-const swpCanvas = document.createElement("canvas");
-const swpCtx = swpCanvas.getContext("2d")
+
+// Image data object and color data array for drawing to canvas
+let imageDataArray;
+let imageData;
 
 let board;
 
@@ -44,13 +48,21 @@ function init() {
     // set canvas sizing
     canvas.width = boardSize.x;
     canvas.height = boardSize.y;
-    swpCanvas.height = canvas.height;
-    swpCanvas.width = canvas.width;
+
+    imageDataArray = new Uint8ClampedArray(boardSize.x * boardSize.y * 4);
+    imageData = new ImageData(imageDataArray, boardSize.x, boardSize.y);
 
     // assign colors and names
     for (let i = 0; i < teamAmount; i++) {
         colors[i] = "#" + ("000000" + Math.floor(Math.random()*16777215).toString(16)).slice(-6);
         names[i] = "team " + i;
+        
+        // Get RGB colors from hex for canvas drawing
+        rgbcolors.push([
+           parseInt(colors[i].substring(1, 3), 16),
+           parseInt(colors[i].substring(3, 5), 16),
+           parseInt(colors[i].substring(4, 6), 16) 
+        ]);
     }
 
     console.log(colors)
@@ -67,16 +79,19 @@ function init() {
 }
 
 // Draw game state to canvas
-function draw() {
+function draw() {    
 	for (let i = 0; i < boardSize.x; i++) {
 		for (let j = 0; j < boardSize.y; j++) {
-			    swpCtx.fillStyle = colors[board[i + j * boardSize.x]];	
-                // swpCtx.fillStyle = dirtyWeights[board[i + j * boardSize.x]] === 0 ? "red" : "blue";						
-				swpCtx.fillRect(i, j, 1, 1);
+            let c = rgbcolors[board[i + j * boardSize.x]]
+            let pos = (i + j * boardSize.x) * 4;
+            imageDataArray[pos] = c[0];
+            imageDataArray[pos + 1] = c[1];
+            imageDataArray[pos + 2] = c[2];
+            imageDataArray[pos + 3] = 255;
 		}
 	}
 
-    ctx.drawImage(swpCanvas, 0, 0);
+    ctx.putImageData(imageData, 0, 0);
 }
 
 // Do one step of strife logic
