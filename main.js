@@ -1,5 +1,4 @@
-import { rleDecode } from "./encoding.js";
-import {clamp, indexOfMax } from "./utils.js";
+import {clamp, imageDataToBoardState, indexOfMax } from "./utils.js";
 
 // Globals
 let teamAmount;
@@ -50,10 +49,12 @@ function validateParams() {
 }
 
 // Returns true if setup should use initial state or false if not. Sets global initialState.
-function validateInitalState() {
+function validateInitialState() {
     let encodedInitialState = params.get("initial");
     try {
-        initalState = rleDecode(encodedInitialState)
+        let imageObject = new Image();
+        imageObject.src = encodedInitialState;
+        initalState = imageDataToBoardState(imageObject);
     }
     catch (error) {
         return false;
@@ -99,10 +100,10 @@ function init() {
     }
 
     console.log(colors)
-
+    
     // set initial board state
     // If we have a valid initial state, setup board with it
-    if (validateInitalState()) {
+    if (validateInitialState()) {
         board = initalState.slice();
     }
     // Otherwise, setup stripe pattern
