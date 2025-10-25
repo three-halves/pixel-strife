@@ -32,18 +32,30 @@ let stepInterval;
 const params = new URLSearchParams(document.location.search);
 console.log(params);
 
+// Tries to parse all URL params. If unsuccessful, redirect to config wizard
+function validateParams() {
+    if (
+    !parseInt(params.get("teams")) || 
+    !parseInt(params.get("sizex")) || 
+    !parseInt(params.get("sizey")) || 
+    !parseInt(params.get("interval"))) {
+        window.alert("invalid parameters!")
+        window.location.replace("config.html");
+        }
+}
+
 // Initialize all game variables from config and setup initial board state
 function init() {
-    // TODO get from url
-    teamAmount = parseInt(params.get("teams"));
+    validateParams();
 
+    teamAmount = parseInt(params.get("teams"));
     boardSize = {x: parseInt(params.get("sizex")), y: parseInt(params.get("sizey"))}
+    stepInterval = parseInt(params.get("interval"));
+
     // setup board arrays
     board = new Uint8Array(boardSize.x * boardSize.y).fill(0);
     dirtyWeights = new Uint8Array(boardSize.x * boardSize.y).fill(1);
     boardWeights = new Array(boardSize.x * boardSize.y).fill(0).map(x => new Float32Array(teamAmount).fill(0));
-
-    stepInterval = parseInt(params.get("interval"));
 
     // set canvas sizing
     canvas.width = boardSize.x;
