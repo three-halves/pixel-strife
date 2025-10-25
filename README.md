@@ -19,3 +19,5 @@ The following URL initiates a simulation with 2 teams, a 125x125 pixel board, an
 
 `http://localhost:5500/?teams=2&sizex=125&sizey=125&interval=2` 
 
+### Configuration Wizard
+A GUI configuration wizard for setting simulation parameters is available in `config.html`
