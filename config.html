@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pixel strife configuration wizard</title>
+</head>
+<body>
+    <form method="get" action="index.html">
+    <fieldset>
+        <legend>pixel strife configuration wizard</legend>
+        <label for="team amount"># of teams: </label>
+        <input type="number" min="0" step="1" value="2" name="teams" required>
+
+        <label for="board width">board width: </label>
+        <input type="number" min="8" step="1" value="125" name="sizex" required>
+
+        <label for="board height">board height: </label>
+        <input type="number" min="8" step="1" value="125" name="sizey" required>
+
+        <label for="step interval">step interval (ms): </label>
+        <input type="number" min="1" step="1" value="2" name="interval" required>
+
+        <input type="submit" value="go...">
+    </fieldset>    
+    </form>
+</body>
+
+<style>
+    fieldset {
+        justify-content: center;
+
+        display: grid;
+        grid-template-columns: max-content max-content;
+        grid-gap: 8px;
+    }
+
+</style>
+</html>
