@@ -62,6 +62,9 @@ function validateInitialState() {
             initHelper(false);
         }
     });
+    imageObject.addEventListener("error", () => {
+        initHelper(false);
+    });
     imageObject.src = encodedInitialState;
 
 }
