@@ -29,6 +29,7 @@ export function rgbToHex(r, g, b) {
 // Returns an unencoded board state uint8 array given image data
 export function imageDataToBoardState(imageObject) {
     //  Canvas to extract pixel data from upload
+    // console.log(imageObject.width);
     let canvas = new OffscreenCanvas(imageObject.width, imageObject.height);
     let ctx = canvas.getContext("2d");
 

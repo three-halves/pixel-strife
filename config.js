@@ -17,12 +17,12 @@ if (e.target.files[0]) {
 
 reader.addEventListener("load", () => {
     selectedImage.src = reader.result;
+});
 
-    // console.log(reader.result);
-
+selectedImage.addEventListener("load", () => {
     // set all form inputs based on image data
     // NOTE: board state is decoded here and in main.js due to image data being more compressed as Base64 png
-    let imageBoardState = imageDataToBoardState(selectedImage)
+    let imageBoardState = imageDataToBoardState(selectedImage);
     initialBoardStateInput.value = selectedImage.src;
     sizeXInput.value = selectedImage.width;
     sizeYInput.value = selectedImage.height;
