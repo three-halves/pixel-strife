@@ -7,11 +7,17 @@
 </head>
 
 <body>
-    <form method="get" action="index.html">
+    <form method="get" action="index.html" id="form">
     <fieldset>
         <legend>pixel-strife configuration wizard</legend>
         <label for="team amount"># of teams: </label>
-        <input type="number" min="2" step="1" value="2" id="teams" name="teams" required>
+        <input type="number" min="2" step="1" value="2" max="256" id="teams" name="teams" required>
+
+        <label for="colors">colors: </label>
+        <div id="color-container" style="width:200px;">
+            <!-- populated w/ js -->
+        </div>
+
 
         <label for="board width">board width: </label>
         <input type="number" min="8" step="1" value="125" id ="sizex" name="sizex" required>

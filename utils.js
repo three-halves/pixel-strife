@@ -52,5 +52,5 @@ export function imageDataToBoardState(imageObject) {
         board[i / 4] = cIndex;
     }
 
-    return board;
+    return {board: board, colors: colors};
 }

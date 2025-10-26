@@ -4,6 +4,11 @@ let selectedImage = new Image();
 // Used to read file from upload
 let reader  = new FileReader();
 
+let storedColors = localStorage["colors"];
+let colors;
+if (storedColors) colors = JSON.parse(storedColors);
+else colors = new Array(255).fill(null);
+
 // Get HTML element references
 let initialBoardStateInput = document.getElementById("initial");
 let sizeXInput = document.getElementById("sizex");
@@ -34,5 +39,37 @@ selectedImage.addEventListener("load", () => {
     initialBoardStateInput.value = selectedImage.src;
     sizeXInput.value = selectedImage.width;
     sizeYInput.value = selectedImage.height;
-    teamsInput.value = Math.max(...imageBoardState) + 1;
+    teamsInput.value = Math.max(...imageBoardState.board) + 1;
+    for (let i = 0; i < imageBoardState.colors.length; i++) {
+        colors[i] = imageBoardState.colors[i];
+    }
+    setupColorInputs();
 });
+
+function setupColorInputs() {
+    colorsContainer.innerHTML = "";
+    for (let i = 0; i < parseInt(teamsInput.value); i++) {
+        let elem = document.createElement("input");
+        elem.type = "color"
+        elem.name = "c" + i;
+        colorsContainer.append(elem);
+
+        if (colors[i] !== null) elem.value = colors[i];
+
+        elem.addEventListener("change", () => {
+            colors[i] = elem.value;
+        });
+    }
+}
+
+let colorsContainer = document.getElementById("color-container");
+
+teamsInput.addEventListener("change", () => {
+    setupColorInputs()
+});
+
+document.getElementById("form").addEventListener("submit", () => {
+    localStorage["colors"] = JSON.stringify(colors);
+});
+
+setupColorInputs();

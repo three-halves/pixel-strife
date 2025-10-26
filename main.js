@@ -4,7 +4,6 @@ import {clamp, imageDataToBoardState, indexOfMax } from "./utils.js";
 let teamAmount;
 let colors = [];
 let rgbcolors = [];
-let names = [];
 let boardSize;
 
 // Optional initial board state that also dictates team amount.
@@ -54,7 +53,7 @@ function validateInitialState() {
     try {
         let imageObject = new Image();
         imageObject.src = encodedInitialState;
-        initalState = imageDataToBoardState(imageObject);
+        initalState = imageDataToBoardState(imageObject).board;
     }
     catch (error) {
         return false;
@@ -84,16 +83,21 @@ function init() {
     imageDataArray = new Uint8ClampedArray(boardSize.x * boardSize.y * 4);
     imageData = new ImageData(imageDataArray, boardSize.x, boardSize.y);
 
-    // assign colors and names
+    // assign colors
     for (let i = 0; i < teamAmount; i++) {
-        colors[i] = "#" + ("000000" + Math.floor(Math.random()*16777215).toString(16)).slice(-6);
-        names[i] = "team " + i;
+        let c = params.get("c" + i);
+        if (c && c.length === 7 && parseInt(c.substring(1), 16) !== NaN) {
+            colors[i] = c
+        }
+        else {
+            colors[i] = "#" + ("000000" + Math.floor(Math.random()*16777215).toString(16)).slice(-6);
+        }
 
         // Get RGB colors from hex for canvas drawing
         rgbcolors.push(new Uint8Array([
             parseInt(colors[i].substring(1, 3), 16),
             parseInt(colors[i].substring(3, 5), 16),
-            parseInt(colors[i].substring(4, 6), 16),
+            parseInt(colors[i].substring(5, 7), 16),
             255
         ])
         );
