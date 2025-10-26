@@ -204,6 +204,7 @@ draw();
 main();
 
 async function main() {
+    await new Promise(r => setTimeout(r, 1000));
     while (true) {
         calcAllWeights();
         step();
