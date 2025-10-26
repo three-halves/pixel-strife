@@ -50,17 +50,20 @@ function validateParams() {
 // Returns true if setup should use initial state or false if not. Sets global initialState.
 function validateInitialState() {
     let encodedInitialState = params.get("initial");
-    try {
-        let imageObject = new Image();
-        imageObject.src = encodedInitialState;
-        initalState = imageDataToBoardState(imageObject).board;
-    }
-    catch (error) {
-        return false;
-    }
+    let imageObject = new Image();
+    imageObject.addEventListener("load", () => {
+        try {
+            initalState = imageDataToBoardState(imageObject).board
+            // Do some basic validation checks
+            initHelper((initalState.length === boardSize.x * boardSize.y) && (Math.max(...initalState) === teamAmount - 1));
+        }
+        catch(error){
+            console.log(error);
+            initHelper(false);
+        }
+    });
+    imageObject.src = encodedInitialState;
 
-    // Do some basic validation checks
-    return ((initalState.length === boardSize.x * boardSize.y) && (Math.max(...initalState) === teamAmount - 1));
 }
 
 // Initialize all game variables from config and setup initial board state
@@ -104,10 +107,13 @@ function init() {
     }
 
     console.log(colors)
+    validateInitialState();
+}
 
-    // set initial board state
+// Initializes the board. Called after passed initial is validated
+function initHelper(isInitialStateValid) {
     // If we have a valid initial state, setup board with it
-    if (validateInitialState()) {
+    if (isInitialStateValid) {
         board = initalState.slice();
     }
     // Otherwise, setup stripe pattern
@@ -121,6 +127,8 @@ function init() {
         }
     }
 
+    draw();
+    main();
 }
 
 // Draw game state to canvas
@@ -200,8 +208,6 @@ function calcAllWeights() {
 
 // Initalize and run game
 init();
-draw();
-main();
 
 async function main() {
     await new Promise(r => setTimeout(r, 1000));
