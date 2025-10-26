@@ -22,6 +22,14 @@ reader.addEventListener("load", () => {
 selectedImage.addEventListener("load", () => {
     // set all form inputs based on image data
     // NOTE: board state is decoded here and in main.js due to image data being more compressed as Base64 png
+
+    // do some sanity checks
+    // TODO quantize image colors
+    if (selectedImage.width > 512 || selectedImage.height > 512){
+        window.alert("Try a simpler image! Maximum 512x512px, 255 colors.");
+        return;
+    }
+
     let imageBoardState = imageDataToBoardState(selectedImage);
     initialBoardStateInput.value = selectedImage.src;
     sizeXInput.value = selectedImage.width;

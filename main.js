@@ -43,7 +43,7 @@ function validateParams() {
     !parseInt(params.get("sizex")) || 
     !parseInt(params.get("sizey")) || 
     !parseInt(params.get("interval"))) {
-        window.alert("invalid parameters!")
+        window.alert("Invalid URL parameters!")
         window.location.replace("config.html");
         }
 }
@@ -100,7 +100,7 @@ function init() {
     }
 
     console.log(colors)
-    
+
     // set initial board state
     // If we have a valid initial state, setup board with it
     if (validateInitialState()) {
