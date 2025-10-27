@@ -15,6 +15,8 @@ let sizeXInput = document.getElementById("sizex");
 let sizeYInput = document.getElementById("sizey");
 let teamsInput = document.getElementById("teams");
 
+let colorsEnabled = false;
+
 document.getElementById('image-upload').addEventListener('change', function(e) {
 if (e.target.files[0]) {
     reader.readAsDataURL(e.target.files[0]);
@@ -47,7 +49,14 @@ selectedImage.addEventListener("load", () => {
 });
 
 function setupColorInputs() {
-    colorsContainer.innerHTML = "";
+    if (!colorsEnabled) {
+        colorsContainer.innerHTML = "randomized!";
+        return;
+    }
+    else {
+        colorsContainer.innerHTML = "";
+    }
+
     for (let i = 0; i < parseInt(teamsInput.value); i++) {
         let elem = document.createElement("input");
         elem.type = "color"
@@ -65,11 +74,16 @@ function setupColorInputs() {
 let colorsContainer = document.getElementById("color-container");
 
 teamsInput.addEventListener("change", () => {
-    setupColorInputs()
+    setupColorInputs();
 });
 
 document.getElementById("form").addEventListener("submit", () => {
     localStorage["colors"] = JSON.stringify(colors);
+});
+
+document.getElementById("colors-enabled-box").addEventListener("change", (ev) => {
+    colorsEnabled = ev.currentTarget.checked;
+    setupColorInputs();
 });
 
 setupColorInputs();

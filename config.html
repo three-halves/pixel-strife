@@ -13,7 +13,11 @@
         <label for="team amount"># of teams: </label>
         <input type="number" min="2" step="1" value="2" max="256" id="teams" name="teams" required>
 
-        <label for="colors">colors: </label>
+        <div>
+            <input type="checkbox" id="colors-enabled-box">
+            <label for="colors">colors: </label>
+        </div>
+
         <div id="color-container" style="width:200px;">
             <!-- populated w/ js -->
         </div>
