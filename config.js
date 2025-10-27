@@ -15,7 +15,7 @@ let sizeXInput = document.getElementById("sizex");
 let sizeYInput = document.getElementById("sizey");
 let teamsInput = document.getElementById("teams");
 
-let colorsEnabled = false;
+let colorsEnabled = document.getElementById("colors-enabled-box").checked;
 
 document.getElementById('image-upload').addEventListener('change', function(e) {
 if (e.target.files[0]) {
