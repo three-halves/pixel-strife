@@ -7,16 +7,16 @@ You can also statically host this repository's files using your favorite web ser
 
 ## Usage
 Simulation options are specified using URL Parameters. 
-Parameters have no default values and must be specified for fully functional operation. Currently accepted parameters:
+Some parameters have no default values and must be specified for fully functional operation. Currently accepted parameters:
 
-| Param Name    | Description |
-| --------      | ------- |
-| `teams`       | Amount of teams/colors that the simulation is initalized with. |
-| `sizex`       | Width of the simulation board |
-| `sizey`       | Height of the simulation board |
-| `interval`    | Millisecond interval between simulation steps. |
-| `initial`     | Base64 Image Data used to create an inital board state |
-| `c[n]`        | Where [n] is any number 0-255. Forces team [n] to be the hex color specified in the parameter. (Requires leading `%23`) |
+| Param Name    | Description | Required |
+| --------      | ------- |   ------- |
+| `teams`       | Amount of teams/colors that the simulation is initalized with | Yes |
+| `sizex`       | Width of the simulation board | Yes |
+| `sizey`       | Height of the simulation board | Yes |
+| `interval`    | Millisecond interval between simulation steps. | Yes |
+| `initial`     | Base64 Image Data used to create an inital board state | No, will default to a vertically-striped board |
+| `c[n]`        | Where [n] is any number 0-255. Forces team [n] to be the hex color specified in the parameter. (Requires leading `%23`) | No, will default to random colors |
 
 ### Examples
 The following URL initiates a simulation with 2 teams, a 125x125 pixel board, and a 2 millisecond delay between steps; Assuming the simulation is hosted on localhost port 5500:
