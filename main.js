@@ -27,8 +27,8 @@ let boardWeights;
 let dirtyWeights;
 
 // Amounts of pixels the square neighborhood extends in any direction 
-let neighborhoodSize = 1;
-let unitWeight = 1 / ((2 * neighborhoodSize + 1) * (2 * neighborhoodSize + 1) - 1);
+// Hard coding neighborhood size as 1 for performance + greater values aren't very interesting
+let unitWeight = 1 / 8;
 
 let stepInterval;
 
@@ -177,27 +177,46 @@ function step() {
 function calcPixelWeights(x, y) {
     boardWeights[x + y * boardSize.x].fill(0);
     // Add unit weight for each color pixel. Index in weights corresponds to pixel team
-    for(let i = -neighborhoodSize; i <= neighborhoodSize; i++) {
-        for(let j = -neighborhoodSize; j <= neighborhoodSize; j++) {
-            if ((i === 0) && (j === 0)) continue;
-            let ni = clamp(0, boardSize.x -1, x + i);
-            let nj = clamp(0, boardSize.y -1, y + j);
-            // console.log(boardWeights[x + y * boardSize.x]);
-            boardWeights[x + y * boardSize.x][board[ni + nj * boardSize.x]] += unitWeight;
-        }
-    }
+    // let ni = clamp(0, boardSize.x -1, x + i);
+    // let nj = clamp(0, boardSize.y -1, y + j);
+    // console.log(boardWeights[x + y * boardSize.x]);
+
+    let a = x + y * boardSize.x;
+    let xp = Math.min(x + 1, boardSize.x - 1);
+    let xn = Math.max(x - 1, 0);
+    let yp = Math.min(y + 1, boardSize.y - 1) * boardSize.x;
+    let yn = Math.max(y - 1, 0) * boardSize.x;
+    y *= boardSize.x;
+    
+    // Check 8 pixel neighborhood
+    boardWeights[a][board[xp + y]] += unitWeight;
+    boardWeights[a][board[xn + y]] += unitWeight;
+    boardWeights[a][board[xp + yp]] += unitWeight;
+    boardWeights[a][board[xn + yp]] += unitWeight; 
+    boardWeights[a][board[xp + yn]] += unitWeight;
+    boardWeights[a][board[xn + yn]] += unitWeight; 
+    boardWeights[a][board[x + yp]] += unitWeight;
+    boardWeights[a][board[x + yn]] += unitWeight; 
 
     dirtyWeights[x + y * boardSize.x] = 0
 }
 
 function dirtyAdjacent(x, y) {
-    for(let i = -neighborhoodSize; i <= neighborhoodSize; i++) {
-        for(let j = -neighborhoodSize; j <= neighborhoodSize; j++) {
-            if ((i === 0) && (j === 0)) continue;
 
-            dirtyWeights[(x + i) + (j + y) * boardSize.x] = 1;
-        }
-    }
+    let xp = Math.min(x + 1, boardSize.x - 1);
+    let xn = Math.max(x - 1, 0);
+    let yp = Math.min(y + 1, boardSize.y - 1) * boardSize.x;
+    let yn = Math.max(y - 1, 0) * boardSize.x;
+    y *= boardSize.x;
+
+    dirtyWeights[xp + y] = 1;
+    dirtyWeights[xn + y] = 1;
+    dirtyWeights[xp + yp] = 1;
+    dirtyWeights[xn + yp] = 1;
+    dirtyWeights[xp + yn] = 1;
+    dirtyWeights[xn + yn] = 1;
+    dirtyWeights[x + yp] = 1;
+    dirtyWeights[x + yn] = 1;
 }
 
 function calcAllWeights() {
