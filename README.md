@@ -14,6 +14,7 @@ Some parameters have no default values and must be specified for fully functiona
 | `teams`       | Amount of teams/colors that the simulation is initalized with | Yes |
 | `sizex`       | Width of the simulation board | Yes |
 | `sizey`       | Height of the simulation board | Yes |
+| `reload`      | Amount of time to wait (in milliseconds) before reloading page after one team covers the board | No, will never reload if not given |
 | `interval`    | Millisecond interval between simulation steps. | Yes |
 | `initial`     | Base64 Image Data used to create an inital board state | No, will default to a vertically-striped board |
 | `c[n]`        | Where [n] is any number 0-255. Forces team [n] to be the hex color specified in the parameter. (Requires leading `%23`) | No, will default to random colors |

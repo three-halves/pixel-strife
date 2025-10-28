@@ -219,15 +219,36 @@ function calcAllWeights() {
     }
 }
 
+// Checks if are pixels are the same color. If so, game is over
+function isGameRunning() {
+    let p = board[0];
+    for (let i = 1; i < board.length; i++) {
+        if (p !== board[i]) 
+            return true;
+    }
+    return false;
+}
+
 // Initalize and run game
 init();
 
 async function main() {
+    // Show initial state for 1 second before main loop
     await new Promise(r => setTimeout(r, 1000));
-    while (true) {
+
+    // Main loop
+    while (isGameRunning()) {
         calcAllWeights();
         step();
         draw();
         await new Promise(r => setTimeout(r, stepInterval));
+    }
+    console.log("end");
+
+    // Wait after game to reload, if setting enabled
+    let reloadDelay = parseInt(params.get("reload"));
+    if (reloadDelay) {
+        await new Promise(r => setTimeout(r, reloadDelay));
+        window.location.reload();
     }
 }
