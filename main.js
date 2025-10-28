@@ -1,4 +1,4 @@
-import {clamp, imageDataToBoardState, indexOfMax } from "./utils.js";
+import {imageDataToBoardState, indexOfMax } from "./utils.js";
 
 // Globals
 let teamAmount;
@@ -136,12 +136,9 @@ function initHelper(isInitialStateValid) {
 
 // Draw game state to canvas
 function draw() {    
-	for (let i = 0; i < boardSize.x; i++) {
-		for (let j = 0; j < boardSize.y; j++) {
-            let c = rgbcolors[board[i + j * boardSize.x]]
-            let pos = (i + j * boardSize.x) * 4;
-            imageDataArray.set(c, pos);
-		}
+	for (let i = 0; i < boardSize.x * boardSize.y; i++) {
+            let c = rgbcolors[board[i]]
+            imageDataArray.set(c, i * 4);
 	}
 
     ctx.putImageData(imageData, 0, 0);
@@ -151,22 +148,19 @@ function draw() {
 function step() {
 	for (let i = 0; i < boardSize.x; i++) {
 		for (let j = 0; j < boardSize.y; j++) {
+            let pos = i + j * boardSize.x;
             // get most influential color in neighborhood and do random threshold check
             // calcPixelWeights(i, j);
-            let weights = boardWeights[i + j * boardSize.x];
+            let weights = boardWeights[pos];
             // console.log(weights);
             // figure out which team this pixel is strifing
+            let currentTeam = board[pos];
+            weights[currentTeam] = -1;
             let maxIndex = indexOfMax(weights);
-            let currentTeam = board[i + j * boardSize.x];
-
-            if (maxIndex == currentTeam) {
-                weights[currentTeam] = -1;
-                maxIndex = indexOfMax(weights);
-            }
 
             // spread check
             if (weights[maxIndex] > Math.random()) {
-                board[i + j * boardSize.x] = maxIndex;
+                board[pos] = maxIndex;
                 dirtyAdjacent(i, j)
             }
         }   
@@ -175,18 +169,15 @@ function step() {
 
 // Calculates a pixels weights if it is dirty.
 function calcPixelWeights(x, y) {
-    boardWeights[x + y * boardSize.x].fill(0);
     // Add unit weight for each color pixel. Index in weights corresponds to pixel team
-    // let ni = clamp(0, boardSize.x -1, x + i);
-    // let nj = clamp(0, boardSize.y -1, y + j);
-    // console.log(boardWeights[x + y * boardSize.x]);
-
     let a = x + y * boardSize.x;
     let xp = Math.min(x + 1, boardSize.x - 1);
     let xn = Math.max(x - 1, 0);
     let yp = Math.min(y + 1, boardSize.y - 1) * boardSize.x;
     let yn = Math.max(y - 1, 0) * boardSize.x;
     y *= boardSize.x;
+
+    boardWeights[a].fill(0);
     
     // Check 8 pixel neighborhood
     boardWeights[a][board[xp + y]] += unitWeight;
@@ -194,7 +185,7 @@ function calcPixelWeights(x, y) {
     boardWeights[a][board[xp + yp]] += unitWeight;
     boardWeights[a][board[xn + yp]] += unitWeight; 
     boardWeights[a][board[xp + yn]] += unitWeight;
-    boardWeights[a][board[xn + yn]] += unitWeight; 
+    boardWeights[a][board[xn + yn]] += unitWeight;
     boardWeights[a][board[x + yp]] += unitWeight;
     boardWeights[a][board[x + yn]] += unitWeight; 
 
