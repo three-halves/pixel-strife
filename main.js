@@ -12,7 +12,7 @@ let initalState;
 
 // Canvas ref
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d")
+const ctx = canvas.getContext("2d", { alpha: false })
 
 // Image data object and color data array for drawing to canvas
 let imageDataArray;
