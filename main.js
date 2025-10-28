@@ -153,7 +153,7 @@ function step() {
 		for (let j = 0; j < boardSize.y; j++) {
             // get most influential color in neighborhood and do random threshold check
             // calcPixelWeights(i, j);
-            let weights = boardWeights[i + j * boardSize.x].slice();
+            let weights = boardWeights[i + j * boardSize.x];
             // console.log(weights);
             // figure out which team this pixel is strifing
             let maxIndex = indexOfMax(weights);
