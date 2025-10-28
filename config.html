@@ -23,19 +23,19 @@
         </div>
 
 
-        <label for="board width">board width: </label>
+        <label for="sizex">board width: </label>
         <input type="number" min="8" step="1" value="125" id ="sizex" name="sizex" required>
 
-        <label for="board height">board height: </label>
+        <label for="sizey">board height: </label>
         <input type="number" min="8" step="1" value="125" id="sizey" name="sizey" required>
 
-        <label for="step interval">step interval (ms): </label>
+        <label for="interval">step interval (ms): </label>
         <input type="number" min="1" step="1" value="2" name="interval" required>
 
-        <label for="auto reload">autoreload delay (ms, 0 = off): </label>
+        <label for="reload">autoreload delay (ms, 0 = off): </label>
         <input type="number" min="0" value="0" name="reload">
 
-        <label for="inital board state">initial board state specifier: </label>
+        <label for="inital">initial board state specifier: </label>
         <input type="text" name="initial" id="initial">
 
         <input type="submit" value="go...">
@@ -44,10 +44,9 @@
 
     <fieldset>
         <legend>special options</legend>
-        <label for="board from image">Make board from image: </label>
+        <label for="image">Make board from image: </label>
         <input type="file" id="image-upload" name="image" accept="image/*" />
     </fieldset>
-    <img id="test" src="">
 
     <script src="config.js" type="module"></script>
 </body>
